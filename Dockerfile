@@ -70,10 +70,6 @@ RUN docker-php-ext-configure gd \
     --with-jpeg-dir=/usr/include/
 RUN NPROC=$(getconf _NPROCESSORS_ONLN)&& docker-php-ext-install -j${NPROC} gd
 
-# Copy xdebug override file
-ENV PHP_XDEBUG_DEFAULT_ENABLE ${PHP_XDEBUG_DEFAULT_ENABLE:-1}
-COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug-dev.ini
-
 # Install composer
 RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
