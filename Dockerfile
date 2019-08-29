@@ -44,11 +44,13 @@ RUN apk add --no-cache \
 # Install php extensions
 RUN pecl install \
     imagick \
-    xdebug
+    xdebug \
+    pcov
 # RUN pear install PHP_CodeSniffer
 RUN docker-php-ext-enable \
     imagick \
-    xdebug
+    xdebug \
+    pcov
 RUN docker-php-ext-configure zip --with-libzip
 RUN docker-php-ext-install \
     bcmath \
