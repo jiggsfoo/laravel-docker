@@ -115,9 +115,9 @@ RUN apk add --no-cache \
 && apk del .build-deps
 
 # Copy wkhtmltopdf files from docker-wkhtmltopdf image
-COPY --from=wkhtmltopdf /bin/wkhtmltopdf /bin/wkhtmltopdf
-COPY --from=wkhtmltopdf /bin/wkhtmltoimage /bin/wkhtmltoimage
-COPY --from=wkhtmltopdf /bin/libwkhtmltox* /bin/
+COPY --from=wkhtmltopdf /bin/wkhtmltopdf /usr/bin/wkhtmltopdf
+COPY --from=wkhtmltopdf /bin/wkhtmltoimage /usr/bin/wkhtmltoimage
+COPY --from=wkhtmltopdf /bin/libwkhtmltox* /usr/bin/
 
 # Setup working directory
 WORKDIR /var/www
