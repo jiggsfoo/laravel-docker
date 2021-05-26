@@ -34,7 +34,7 @@ RUN apk add --no-cache \
     openssh-client \
     postgresql-libs \
     rsync \
-    python \
+    python3 \
     py-pip \
     groff \
     wkhtmltopdf \
@@ -81,6 +81,7 @@ ENV COMPOSER_HOME /composer
 ENV PATH ./vendor/bin:/composer/vendor/bin:$PATH
 ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+
 # Install AWS CLI
 RUN pip install awscli
 
