@@ -1,4 +1,4 @@
-FROM php:7.2-alpine
+FROM php:7.4-alpine
 
 # Install dev dependencies
 RUN apk add --no-cache --virtual .build-deps \
@@ -7,7 +7,6 @@ RUN apk add --no-cache --virtual .build-deps \
     imagemagick-dev \
     libtool \
     libxml2-dev \
-    php7-phpdbg \
     postgresql-dev \
     sqlite-dev
 
@@ -15,22 +14,23 @@ RUN apk add --no-cache --virtual .build-deps \
 RUN apk add --no-cache \
     bash \
     curl \
+    freetype-dev \
     g++ \
     gcc \
     git \
+    icu-dev \
+    icu-libs \
     imagemagick \
     libc-dev \
+    libjpeg-turbo-dev \
     libpng-dev \
     libzip-dev \
-    freetype \
-    libpng \
-    libjpeg-turbo \
-    freetype-dev \
-    libjpeg-turbo-dev \
     make \
     mysql-client \
     nodejs \
     nodejs-npm \
+    oniguruma-dev \
+    yarn \
     openssh-client \
     postgresql-libs \
     rsync \
@@ -41,42 +41,46 @@ RUN apk add --no-cache \
     zip \
     zlib-dev
 
-# Install php extensions
+# Install PECL and PEAR extensions
 RUN pecl install \
+    redis \
     imagick \
-    xdebug \
-    pcov
-# RUN pear install PHP_CodeSniffer
+    xdebug
+
+# Enable PECL and PEAR extensions
 RUN docker-php-ext-enable \
+    redis \
     imagick \
-    xdebug \
-    pcov
-RUN docker-php-ext-configure zip --with-libzip
+    xdebug
+
+# Configure php extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+
+# Install php extensions
 RUN docker-php-ext-install \
     bcmath \
-    exif \
+    calendar \
     curl \
+    exif \
+    gd \
     iconv \
+    intl \
     mbstring \
     pdo \
     pdo_mysql \
     pdo_pgsql \
     pdo_sqlite \
     pcntl \
+    soap \
     tokenizer \
     xml \
     zip
-RUN docker-php-ext-configure gd \
-    --with-freetype-dir=/usr/include/ \
-    --with-png-dir=/usr/include/ \
-    --with-jpeg-dir=/usr/include/
-RUN NPROC=$(getconf _NPROCESSORS_ONLN)&& docker-php-ext-install -j${NPROC} gd
 
 # Install composer
+ENV COMPOSER_HOME /composer
+ENV PATH ./vendor/bin:/composer/vendor/bin:$PATH
+ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
-ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV PATH="./vendor/bin:$PATH"
-
 # Install AWS CLI
 RUN pip install awscli
 
